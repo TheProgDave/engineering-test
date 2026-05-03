@@ -34,4 +34,16 @@ public class TestAssemblyTests
         Assert.Contains(testItem, items);
         Assert.Equal(2, items.FindAll(x => x == testItem2).Count);
     }
+
+    [Fact]
+    public void UpdateQuality_NonPerishableItemSupplied_NoProprtyMutationsApplied()
+    {
+        // TODO: DG refactor into fixture.
+        var app = new Program();
+        var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
+        app.AddItems(new List<Item> { testItem });
+        var items = app.GetItems();
+        Assert.Single(items);
+        Assert.Contains(testItem, items);
+    }
 }
