@@ -2,7 +2,7 @@
 
 public class Program
 {
-    public IList<Item> Items = new List<Item>();
+    private IList<Item> Items = new List<Item>();
 
     static void Main(string[] args)
     {
@@ -17,11 +17,12 @@ public class Program
                 new Item {Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7},
                 new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80},
                 new Item
-                    {
-                        Name = "Backstage passes to a TAFKAL80ETC concert",
-                        SellIn = 15,
-                        Quality = 20
-                    },
+                {
+                    Name = "Backstage passes to a TAFKAL80ETC concert",
+                    SellIn = 15,
+                    Quality = 20
+                },
+                // (DG) ASSUMPTION: An itemn is "Conjured" if the Name starts with "Conjured".
                 new Item {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
             }
 
@@ -30,6 +31,16 @@ public class Program
         app.UpdateQuality();
 
         System.Console.ReadKey();
+    }
+
+    public void AddItems(List<Item> items)
+    {
+        Items = items;
+    }
+
+    public List<Item> GetItems()
+    {
+        return Items.ToList();
     }
 
     public void UpdateQuality()
