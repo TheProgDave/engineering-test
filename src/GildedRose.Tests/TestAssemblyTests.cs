@@ -58,7 +58,7 @@ public class TestAssemblyTests
         app.UpdateQuality();
         var items = app.GetItems();
         Assert.Contains(testItem, items);
-        Assert.Equal(items[0].Quality, initQuality + 1);
+        Assert.Equal(initQuality + 1, items[0].Quality);
     }
 
     [Theory]
@@ -78,7 +78,7 @@ public class TestAssemblyTests
         app.UpdateQuality();
         var items = app.GetItems();
         Assert.Contains(testItem, items);
-        Assert.Equal(items[0].Quality, expectedQuality);
+        Assert.Equal(expectedQuality, items[0].Quality);
     }
 
     [Theory]
@@ -94,6 +94,6 @@ public class TestAssemblyTests
         app.UpdateQuality();
         var items = app.GetItems();
         Assert.Contains(testItem, items);
-        Assert.Equal(items[0].Quality, expectedQuality);
+        Assert.Equal(expectedQuality, items[0].Quality);
     }
 }
