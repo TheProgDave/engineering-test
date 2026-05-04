@@ -1,15 +1,18 @@
-﻿namespace GildedRose.Console;
+﻿using GildedRose.Console.ItemFactory;
+
+namespace GildedRose.Console;
 
 public class Program
 {
     private IList<Item> _items = new List<Item>();
+    public ItemUpdaterFactory _itemUpdaterFactory = new ItemUpdaterFactory();
 
     static void Main(string[] args)
     {
         System.Console.WriteLine("OMGHAI!");
         var app = new Program();
-
-        app.AddItems(new List<Item>
+        // (DG) ASSUMPTION: In an exercise, changing the item-list out for proper feels like it misses the point. However, in a real-world scenario, modifying that list would be essential.
+        app.AddItems( new List<Item>
             {
                 new() {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
                 new() {Name = "Aged Brie", SellIn = 2, Quality = 0},
@@ -20,7 +23,6 @@ public class Program
                 new() {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
             });
         app.UpdateQuality();
-
         System.Console.ReadKey();
     }
 
@@ -38,51 +40,8 @@ public class Program
     {
         foreach (var item in _items)
         {
-
-            // "Sulfuras, Hand of Ragnaros" is unchanging and any item with Quality = 0 needs no adjustment.
-            if (item.Name == "Sulfuras, Hand of Ragnaros")
-            {
-                continue;
-            }
-
-            var rate = 1;
-            if (item.Name == "Aged Brie" && item.Quality != 50)
-            {
-                item.Quality = AdjustQuality(item.Quality, rate);
-                continue;
-            }
-
-            if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
-            {
-                if (item.SellIn <= 0)
-                {
-                    item.Quality = 0;
-                    continue;
-                }
-                if (item.SellIn <= 5)
-                {
-                    item.Quality = AdjustQuality(item.Quality, 3);
-                    continue;
-                }
-                else if (item.SellIn <= 10)
-                {
-                    item.Quality = AdjustQuality(item.Quality, 2);
-                    continue;
-                }
-                else
-                {
-                    item.Quality = AdjustQuality(item.Quality, rate);
-                    continue;
-                }
-
-            }
-
-            if (item.Name.StartsWith("Conjured"))
-            {
-                rate *= 2;
-            }
-
-            item.Quality = AdjustQuality(item.Quality, -rate);
+            var itemUpdater = _itemUpdaterFactory.GetItemUpdater(item);
+            itemUpdater.Update(item);
         }
     }
 
@@ -122,4 +81,6 @@ public class Item
       i.e. Adding 'public bool NonPerishable {get; set; );', applying NonPerishable = true to "Sulfuras, Hand of Ragnaros", and altering 'UpdateQuality()' to check if true early; Would allow "Sulfuras, Hand of Ragnaros" skipped, with no explicit Name-checking or further handling required. 
     - Observation: "Sulfuras, Hand of Ragnaros" is being exempt from SellIn reductions; and loosely makes sense with its other qualities, but this stands as an ASSUMPTION rather than something confirmed in requirements. Would usually seek clarification here.
     - It would have been much-preferred to be able to move the 'Item' class to it's own file.
+    - Used Gemini to see if I could further refine the main-loop; use of Strategy and Factory patterns were suggested; Full disclamer - I'd seen plenty of examples of the Factory pattern prior (It usually helps that they are named as such) but I hadn't been aware of the Strategy pattern; this prompted some reseach into basic implementations. 
+    - The unit tests written fairly early into my editing of this code-base proved invalueable when performing the various refactors; this was not proper TDD - but harnessed some of the power of the approach.
  */
