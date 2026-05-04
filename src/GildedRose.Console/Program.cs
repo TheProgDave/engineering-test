@@ -76,6 +76,12 @@ public class Program
                 }
 
             }
+
+            if (item.Name.StartsWith("Conjured"))
+            {
+                rate *= 2;
+            }
+
             item.Quality = AdjustQuality(item.Quality, -rate);
         }
     }
