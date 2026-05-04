@@ -82,14 +82,30 @@ public class TestAssemblyTests
     }
 
     [Theory]
-    [InlineData(10, 20, 19)]    // standard increase applies.
-    [InlineData(10, 0, 0)]      // upper boundary of +2 increase.
-    [InlineData(0, 0, 0)]       // lower boundary of +2 increase.
-    public void UpdateQuality_StanardItemSupplied_QuantityDecreasesUnlessAtLimit(int initSellIn, int initQuality, int expectedQuality)
+    [InlineData(10, 20, 19)]    // standard decrease applies.
+    [InlineData(10, 0, 0)]      // minimum 0 limit applies.
+    [InlineData(0, 0, 0)]       // minimum 0 limit applies.
+    public void UpdateQuality_StandardItemSupplied_QuantityDecreasesUnlessAtLimit(int initSellIn, int initQuality, int expectedQuality)
     {
         // TODO: (DG) refactor into fixture.
         var app = new Program();
         var testItem = new Item { Name = "+5 Dexterity Vest", SellIn = initSellIn, Quality = initQuality };
+        app.AddItems(new List<Item> { testItem });
+        app.UpdateQuality();
+        var items = app.GetItems();
+        Assert.Contains(testItem, items);
+        Assert.Equal(expectedQuality, items[0].Quality);
+    }
+
+    [Theory]
+    [InlineData(10, 12, 10)]    // doubled decay-rate applies.
+    [InlineData(100, 1, 0)]     // minimum 0 limit nullifies doubled decay-rate.
+    [InlineData(0, 0, 0)]       // minimum 0 limit applies.
+    public void UpdateQuality_ConjuredItemSupplied_QuantityDecreasesTwiceAsMuch(int initSellIn, int initQuality, int expectedQuality)
+    {
+        // TODO: (DG) refactor into fixture.
+        var app = new Program();
+        var testItem = new Item { Name = "Conjured Mana Cake", SellIn = initSellIn, Quality = initQuality };
         app.AddItems(new List<Item> { testItem });
         app.UpdateQuality();
         var items = app.GetItems();
