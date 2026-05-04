@@ -36,83 +36,47 @@ public class Program
 
     public void UpdateQuality()
     {
-        for (var i = 0; i < _items.Count; i++)
+        foreach (var item in _items)
         {
-            // "Sulfuras, Hand of Ragnaros" will always have a `Quailty = 80` and `SellIn = 0`.
-            if (_items[i].Name == "Sulfuras, Hand of Ragnaros")
+
+            // "Sulfuras, Hand of Ragnaros" is unchanging and any item with Quality = 0 needs no adjustment.
+            if (item.Name == "Sulfuras, Hand of Ragnaros")
             {
                 continue;
             }
 
-            if (_items[i].Name != "Aged Brie" && _items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
+            var rate = 1;
+            if (item.Name == "Aged Brie" && item.Quality != 50)
             {
-                if (_items[i].Quality > 0)
+                item.Quality = AdjustQuality(item.Quality, rate);
+                continue;
+            }
+
+            if (item.Name == "Backstage passes to a TAFKAL80ETC concert")
+            {
+                if (item.SellIn <= 0)
                 {
-                   if (_items[i].Name != "Sulfuras, Hand of Ragnaros")
-                    {
-                    _items[i].Quality = _items[i].Quality - 1;
-                    }
+                    item.Quality = 0;
+                    continue;
                 }
-            }
-            else
-            {
-                if (_items[i].Quality < 50)
+                if (item.SellIn <= 5)
                 {
-                    _items[i].Quality = _items[i].Quality + 1;
-
-                    if (_items[i].Name == "Backstage passes to a TAFKAL80ETC concert")
-                    {
-                        if (_items[i].SellIn < 11)
-                        {
-                            if (_items[i].Quality < 50)
-                            {
-                                _items[i].Quality = _items[i].Quality + 1;
-                            }
-                        }
-
-                        if (_items[i].SellIn < 6)
-                        {
-                            if (_items[i].Quality < 50)
-                            {
-                                _items[i].Quality = _items[i].Quality + 1;
-                            }
-                        }
-                    }
+                    item.Quality = AdjustQuality(item.Quality, 3);
+                    continue;
                 }
-            }
-
-            if (_items[i].Name != "Sulfuras, Hand of Ragnaros")
-            {
-                _items[i].SellIn = _items[i].SellIn - 1;
-            }
-
-            if (_items[i].SellIn < 0)
-            {
-                if (_items[i].Name != "Aged Brie")
+                else if (item.SellIn <= 10)
                 {
-                    if (_items[i].Name != "Backstage passes to a TAFKAL80ETC concert")
-                    {
-                        if (_items[i].Quality > 0)
-                        {
-                            if (_items[i].Name != "Sulfuras, Hand of Ragnaros")
-                            {
-                            _items[i].Quality = _items[i].Quality - 1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _items[i].Quality = _items[i].Quality - _items[i].Quality;
-                    }
+                    item.Quality = AdjustQuality(item.Quality, 2);
+                    continue;
                 }
                 else
                 {
-                    if (_items[i].Quality < 50)
-                    {
-                        _items[i].Quality = _items[i].Quality + 1;
-                    }
+                    item.Quality = AdjustQuality(item.Quality, rate);
+                    continue;
                 }
+
             }
+            item.Quality = AdjustQuality(item.Quality, -rate);
         }
     }
 
