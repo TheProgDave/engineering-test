@@ -3,7 +3,7 @@ using Xunit;
 
 namespace GildedRose.Tests;
 
-public class TestAssemblyTests
+public class ItemManagementTests
 {
 
     [Fact]
