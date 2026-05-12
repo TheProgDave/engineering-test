@@ -4,18 +4,24 @@ namespace GildedRose.Console.ItemFactory
 {
     public class ItemUpdaterFactory
     {
-        public ItemUpdater GetItemUpdater(Item item) 
+
+        private readonly IItemUpdater _maturingItemUpdater = new MaturingItemUpdater();
+        private readonly IItemUpdater _concertTicketItemUpdater = new ConcertTicketItemUpdater();
+        private readonly IItemUpdater _conjuredItemUpdater = new ConjuredItemUpdater();
+        private readonly IItemUpdater _standardItemUpdater = new StandardItemUpdater();
+           
+        public IItemUpdater GetItemUpdater(Item item) 
         {
             switch (item.Name) 
             {
                 case "Aged Brie":
-                    return new MaturingItemUpdater();
+                    return _maturingItemUpdater;
                 case "Backstage passes to a TAFKAL80ETC concert":
-                    return new ConcertTicketItemUpdater();
+                    return _concertTicketItemUpdater;
                 case "Conjured Mana Cake":
-                    return new ConjuredItemUpdater();
+                    return _conjuredItemUpdater;
                 default:
-                    return new StandardItemUpdater();
+                    return _standardItemUpdater;
             }
         }
     }
