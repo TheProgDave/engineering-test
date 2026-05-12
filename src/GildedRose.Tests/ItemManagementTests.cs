@@ -10,11 +10,11 @@ public class ItemManagementTests
     public void AddItems_AddItemsToAvailibleInventory_ItemsAdded()
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
-        app.AddItems(new List<Item> { testItem });
+        itemManagement.AddItems(new List<Item> { testItem });
 
-        var items = app.GetItems();
+        var items = itemManagement.GetItems();
         Assert.Single(items);
         Assert.Contains(testItem, items);
     }
@@ -23,12 +23,12 @@ public class ItemManagementTests
     public void GetItems_RequestAllItems_ReturnsAllItems()
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
         var testItem2 = new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 };
-        app.AddItems(new List<Item> { testItem, testItem2, testItem2 });
+        itemManagement.AddItems(new List<Item> { testItem, testItem2, testItem2 });
 
-        var items = app.GetItems();
+        var items = itemManagement.GetItems();
         Assert.NotEmpty(items);
         Assert.Equal(3, items.Count);
         Assert.Contains(testItem, items);
@@ -39,11 +39,11 @@ public class ItemManagementTests
     public void UpdateQuality_NonPerishableItemSupplied_QualityRemainsUnchanged()
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
-        app.AddItems(new List<Item> { testItem });
-        app.UpdateQuality();
-        var items = app.GetItems();
+        itemManagement.AddItems(new List<Item> { testItem });
+        itemManagement.UpdateQuality();
+        var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
     }
 
@@ -51,12 +51,12 @@ public class ItemManagementTests
     public void UpdateQuality_MaturingItemSupplied_QuanityIncreasesUnlessAtLimit()
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var initQuality = 0;
         var testItem = new Item { Name = "Aged Brie", SellIn = 2, Quality = initQuality };
-        app.AddItems(new List<Item> { testItem });
-        app.UpdateQuality();
-        var items = app.GetItems();
+        itemManagement.AddItems(new List<Item> { testItem });
+        itemManagement.UpdateQuality();
+        var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(initQuality + 1, items[0].Quality);
     }
@@ -72,11 +72,11 @@ public class ItemManagementTests
     public void UpdateQuality_BackStagePassItemSupplied_Quality(int initSellIn, int initQuality, int expectedQuality)
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var testItem = new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = initSellIn, Quality = initQuality };
-        app.AddItems(new List<Item> { testItem });
-        app.UpdateQuality();
-        var items = app.GetItems();
+        itemManagement.AddItems(new List<Item> { testItem });
+        itemManagement.UpdateQuality();
+        var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(expectedQuality, items[0].Quality);
     }
@@ -88,11 +88,11 @@ public class ItemManagementTests
     public void UpdateQuality_StandardItemSupplied_QuantityDecreasesUnlessAtLimit(int initSellIn, int initQuality, int expectedQuality)
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var testItem = new Item { Name = "+5 Dexterity Vest", SellIn = initSellIn, Quality = initQuality };
-        app.AddItems(new List<Item> { testItem });
-        app.UpdateQuality();
-        var items = app.GetItems();
+        itemManagement.AddItems(new List<Item> { testItem });
+        itemManagement.UpdateQuality();
+        var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(expectedQuality, items[0].Quality);
     }
@@ -104,11 +104,11 @@ public class ItemManagementTests
     public void UpdateQuality_ConjuredItemSupplied_QuantityDecreasesTwiceAsMuch(int initSellIn, int initQuality, int expectedQuality)
     {
         // TODO: (DG) refactor into fixture.
-        var app = new Program();
+        var itemManagement = new ItemManagement();
         var testItem = new Item { Name = "Conjured Mana Cake", SellIn = initSellIn, Quality = initQuality };
-        app.AddItems(new List<Item> { testItem });
-        app.UpdateQuality();
-        var items = app.GetItems();
+        itemManagement.AddItems(new List<Item> { testItem });
+        itemManagement.UpdateQuality();
+        var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(expectedQuality, items[0].Quality);
     }
