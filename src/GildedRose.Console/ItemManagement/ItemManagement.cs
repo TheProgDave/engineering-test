@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GildedRose.Console.ItemManagement
+namespace GildedRose.Console
 {
     public class ItemManagement
     {

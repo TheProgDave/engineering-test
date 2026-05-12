@@ -1,18 +1,13 @@
-﻿using GildedRose.Console.ItemFactory;
-
-namespace GildedRose.Console;
+﻿namespace GildedRose.Console;
 
 public class Program
 {
-    private IList<Item> _items = new List<Item>();
-    public ItemUpdaterFactory _itemUpdaterFactory = new ItemUpdaterFactory();
-
     static void Main(string[] args)
     {
         System.Console.WriteLine("OMGHAI!");
-        var app = new Program();
-        // (DG) ASSUMPTION: In an exercise, changing the item-list out for proper feels like it misses the point. However, in a real-world scenario, modifying that list would be essential.
-        app.AddItems( new List<Item>
+        var itemManagement = new ItemManagement();
+        // (DG) ASSUMPTION: In an exercise, changing the item-list out for proper persistence feels like it misses the point. However, in a real-world scenario, modifying the persistence-layer would be essential.
+        itemManagement.AddItems( new List<Item>
             {
                 new() {Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20},
                 new() {Name = "Aged Brie", SellIn = 2, Quality = 0},
@@ -22,27 +17,8 @@ public class Program
                 // (DG) ASSUMPTION: An itemn is "Conjured" if the Name starts with "Conjured".
                 new() {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
             });
-        app.UpdateQuality();
+        itemManagement.UpdateQuality();
         System.Console.ReadKey();
-    }
-
-    public void AddItems(List<Item> items)
-    {
-        _items = items;
-    }
-
-    public List<Item> GetItems()
-    {
-        return _items.ToList();
-    }
-
-    public void UpdateQuality()
-    {
-        foreach (var item in _items)
-        {
-            var itemUpdater = _itemUpdaterFactory.GetItemUpdater(item);
-            itemUpdater.Update(item);
-        }
     }
 }
 
