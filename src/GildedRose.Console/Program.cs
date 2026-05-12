@@ -60,10 +60,6 @@ public class Program
         return quality;
     }
     */
-    private int AdjustQuality(int quality, int adjustment)
-    {
-        return Math.Clamp(quality + adjustment, 0, 50);
-    }
 }
 
 // Do not modify Item - Golbin will be mad.
