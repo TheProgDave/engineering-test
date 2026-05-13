@@ -1,6 +1,6 @@
 ﻿namespace GildedRose.Console.ItemUpdaters
 {
-    public class ConjuredItemUpdater : ItemUpdater
+    public class ConjuredItemQualityUpdater : ItemQualityUpdater
     {
         public override void Update(Item item)
         {

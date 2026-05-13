@@ -1,6 +1,6 @@
 ﻿namespace GildedRose.Console.ItemUpdaters
 {
-    public abstract class ItemUpdater : IItemUpdater
+    public abstract class ItemQualityUpdater : IItemQualityUpdater
     {
         
         private readonly int _minQuality = 0;

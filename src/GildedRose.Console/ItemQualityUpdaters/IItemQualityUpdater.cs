@@ -1,7 +1,7 @@
 namespace GildedRose.Console.ItemUpdaters
 {
     
-    public interface IItemUpdater
+    public interface IItemQualityUpdater
     {
         public void Update(Item item);   
     }

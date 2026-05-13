@@ -29,8 +29,8 @@ namespace GildedRose.Console
         {
             foreach (var item in _items)
             {
-                var itemUpdater = _itemUpdaterFactory.GetItemUpdater(item);
-                itemUpdater.Update(item);
+                var itemQualityUpdater = _itemUpdaterFactory.GetItemQualityUpdater(item);
+                itemQualityUpdater.Update(item);
             }
         }
     }

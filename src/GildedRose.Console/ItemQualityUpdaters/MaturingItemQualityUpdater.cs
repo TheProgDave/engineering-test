@@ -1,6 +1,6 @@
 ﻿namespace GildedRose.Console.ItemUpdaters
 {
-    public class MaturingItemUpdater : ItemUpdater
+    public class MaturingItemQualityUpdater : ItemQualityUpdater
     {
         public override void Update(Item item)
         {

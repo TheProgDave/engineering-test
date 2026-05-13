@@ -1,6 +1,6 @@
 ﻿namespace GildedRose.Console.ItemUpdaters
 {
-    public class ConcertTicketItemUpdater : ItemUpdater
+    public class ConcertTicketItemQualityUpdater : ItemQualityUpdater
     {
         public override void Update(Item item)
         {
