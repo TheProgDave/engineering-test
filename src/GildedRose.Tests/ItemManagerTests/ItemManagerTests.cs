@@ -3,15 +3,20 @@ using Xunit;
 
 namespace GildedRose.Tests;
 
-public class ItemManagementTests
+public class ItemManagerTests : IClassFixture<ItemManagerFixture>
 {
+    private readonly ItemManagerFixture _fixture;
+
+    public ItemManagerTests(ItemManagerFixture fixture)
+    {
+        _fixture = fixture;
+    }
 
     [Fact]
     public void AddItems_AddItemsToAvailibleInventory_ItemsAdded()
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
-        var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
+        var itemManagement = _fixture.CreateItemManager();
+        var testItem = _fixture.Sulfuras();
         itemManagement.AddItems(new List<Item> { testItem });
 
         var items = itemManagement.GetItems();
@@ -22,10 +27,9 @@ public class ItemManagementTests
     [Fact]
     public void GetItems_RequestAllItems_ReturnsAllItems()
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
-        var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
-        var testItem2 = new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 };
+        var itemManagement = _fixture.CreateItemManager();
+        var testItem = _fixture.Sulfuras();
+        var testItem2 = _fixture.AgedBrie();
         itemManagement.AddItems(new List<Item> { testItem, testItem2, testItem2 });
 
         var items = itemManagement.GetItems();
@@ -36,26 +40,24 @@ public class ItemManagementTests
     }
 
     [Fact]
-    public void UpdateQuality_NonPerishableItemSupplied_QualityRemainsUnchanged()
+    public void UpdateItems_NonPerishableItemSupplied_QualityRemainsUnchanged()
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
-        var testItem = new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
+        var itemManagement = _fixture.CreateItemManager();
+        var testItem = _fixture.Sulfuras();
         itemManagement.AddItems(new List<Item> { testItem });
-        itemManagement.UpdateQuality();
+        itemManagement.UpdateItems();
         var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
     }
 
     [Fact]
-    public void UpdateQuality_MaturingItemSupplied_QuanityIncreasesUnlessAtLimit()
+    public void UpdateItems_MaturingItemSupplied_QuanityIncreasesUnlessAtLimit()
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
+        var itemManagement = _fixture.CreateItemManager();
         var initQuality = 0;
-        var testItem = new Item { Name = "Aged Brie", SellIn = 2, Quality = initQuality };
+        var testItem = _fixture.AgedBrie(2, initQuality);
         itemManagement.AddItems(new List<Item> { testItem });
-        itemManagement.UpdateQuality();
+        itemManagement.UpdateItems();
         var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(initQuality + 1, items[0].Quality);
@@ -69,13 +71,12 @@ public class ItemManagementTests
     [InlineData(1, 12, 15)]     // lower boundary of +3 increase.
     [InlineData(0, 50, 0)]      // day-of decrease applies.
     [InlineData(2, 49, 50)]     // maximum 50 limit applies.
-    public void UpdateQuality_BackStagePassItemSupplied_Quality(int initSellIn, int initQuality, int expectedQuality)
+    public void UpdateItems_BackStagePassItemSupplied_QualityChanges(int initSellIn, int initQuality, int expectedQuality)
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
-        var testItem = new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = initSellIn, Quality = initQuality };
+        var itemManagement = _fixture.CreateItemManager();
+        var testItem = _fixture.BackstagePass(initSellIn, initQuality);
         itemManagement.AddItems(new List<Item> { testItem });
-        itemManagement.UpdateQuality();
+        itemManagement.UpdateItems();
         var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(expectedQuality, items[0].Quality);
@@ -85,13 +86,13 @@ public class ItemManagementTests
     [InlineData(10, 20, 19)]    // standard decrease applies.
     [InlineData(10, 0, 0)]      // minimum 0 limit applies.
     [InlineData(0, 0, 0)]       // minimum 0 limit applies.
-    public void UpdateQuality_StandardItemSupplied_QuantityDecreasesUnlessAtLimit(int initSellIn, int initQuality, int expectedQuality)
+    [InlineData(-1, 10, 8)]     // day-of decrease applies.
+    public void UpdateItems_StandardItemSupplied_QuantityDecreasesUnlessAtLimit(int initSellIn, int initQuality, int expectedQuality)
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
-        var testItem = new Item { Name = "+5 Dexterity Vest", SellIn = initSellIn, Quality = initQuality };
+        var itemManagement = _fixture.CreateItemManager();
+        var testItem = _fixture.StandardItem(initSellIn, initQuality);
         itemManagement.AddItems(new List<Item> { testItem });
-        itemManagement.UpdateQuality();
+        itemManagement.UpdateItems();
         var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(expectedQuality, items[0].Quality);
@@ -101,13 +102,13 @@ public class ItemManagementTests
     [InlineData(10, 12, 10)]    // doubled decay-rate applies.
     [InlineData(100, 1, 0)]     // minimum 0 limit nullifies doubled decay-rate.
     [InlineData(0, 0, 0)]       // minimum 0 limit applies.
-    public void UpdateQuality_ConjuredItemSupplied_QuantityDecreasesTwiceAsMuch(int initSellIn, int initQuality, int expectedQuality)
+    [InlineData(-1, 10, 6)]      // day-of doubled decay-rate applies.
+    public void UpdateItems_ConjuredItemSupplied_QuantityDecreasesTwiceAsMuch(int initSellIn, int initQuality, int expectedQuality)
     {
-        // TODO: (DG) refactor into fixture.
-        var itemManagement = new ItemManagement();
-        var testItem = new Item { Name = "Conjured Mana Cake", SellIn = initSellIn, Quality = initQuality };
+        var itemManagement = _fixture.CreateItemManager();
+        var testItem = _fixture.ConjuredItem(initSellIn, initQuality);
         itemManagement.AddItems(new List<Item> { testItem });
-        itemManagement.UpdateQuality();
+        itemManagement.UpdateItems();
         var items = itemManagement.GetItems();
         Assert.Contains(testItem, items);
         Assert.Equal(expectedQuality, items[0].Quality);

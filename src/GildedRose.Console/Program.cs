@@ -5,7 +5,7 @@ public class Program
     static void Main(string[] args)
     {
         System.Console.WriteLine("OMGHAI!");
-        var itemManagement = new ItemManagement();
+        var itemManagement = new ItemManager();
         // (DG) ASSUMPTION: In an exercise, changing the item-list out for proper persistence feels like it misses the point. However, in a real-world scenario, modifying the persistence-layer would be essential.
         itemManagement.AddItems( new List<Item>
             {
@@ -17,7 +17,7 @@ public class Program
                 // (DG) ASSUMPTION: An itemn is "Conjured" if the Name starts with "Conjured".
                 new() {Name = "Conjured Mana Cake", SellIn = 3, Quality = 6}
             });
-        itemManagement.UpdateQuality();
+        itemManagement.UpdateItems();
         System.Console.ReadKey();
     }
 }

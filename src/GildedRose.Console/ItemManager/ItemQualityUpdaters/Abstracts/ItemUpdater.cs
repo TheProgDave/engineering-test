@@ -26,6 +26,11 @@
         */
         protected void AdjustQuality(Item item, int amount)
         {
+            if (amount < 0 && item.SellIn < 0)
+            {
+                amount *= 2;
+            }
+            
             item.Quality = Math.Clamp(item.Quality + amount, _minQuality, _maxQuality);
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GildedRose.Console
 {
-    public class ItemManagement
+    public class ItemManager
     {
 
         private IList<Item> _items = new List<Item>();
@@ -25,12 +25,26 @@ namespace GildedRose.Console
             return _items.ToList();
         }
 
-        public void UpdateQuality()
+        public void UpdateItems()
+        {
+            UpdateSellIn();
+            UpdateQuality();
+        }
+
+        private void UpdateQuality()
         {
             foreach (var item in _items)
             {
                 var itemQualityUpdater = _itemUpdaterFactory.GetItemQualityUpdater(item);
                 itemQualityUpdater.Update(item);
+            }
+        }
+
+        private void UpdateSellIn()
+        {
+            foreach (var item in _items)
+            {
+                //
             }
         }
     }
